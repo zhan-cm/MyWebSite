@@ -1,0 +1,52 @@
+---
+import '../global.css';
+
+const { title = "Chemic.dev" } = Astro.props;
+
+// 🌟 魔法在这里：获取当前浏览器的路径
+const currentPath = Astro.url.pathname;
+---
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+  </head>
+  
+  <body class="bg-slate-950 text-slate-300 min-h-screen font-sans selection:bg-sky-500/30 tracking-wide overflow-x-hidden relative flex flex-col">
+
+    <div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-sky-900/15 blur-[120px] pointer-events-none z-0"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[30%] h-[30%] rounded-full bg-purple-900/10 blur-[120px] pointer-events-none z-0"></div>
+
+    <header class="w-full border-b border-slate-800/40 bg-slate-950/60 backdrop-blur-xl sticky top-0 z-40 shrink-0">
+      <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div class="text-slate-100 font-bold text-lg font-mono flex items-center gap-2">
+          <span class="text-sky-400">#</span> Chemic.dev
+        </div>
+        
+        <nav class="hidden md:flex gap-8 text-sm font-medium">
+          <a href="/" class={`pb-1 border-b-2 transition-colors ${currentPath === '/' ? 'text-sky-400 border-sky-400' : 'text-slate-400 border-transparent hover:text-sky-400'}`}>主页</a>
+          
+          <a href="/anime" class={`pb-1 border-b-2 transition-colors ${currentPath.startsWith('/anime') ? 'text-sky-400 border-sky-400' : 'text-slate-400 border-transparent hover:text-sky-400'}`}>娱乐</a>
+          
+          <a href="/changelog" class={`pb-1 border-b-2 transition-colors ${currentPath.startsWith('/changelog') ? 'text-sky-400 border-sky-400' : 'text-slate-400 border-transparent hover:text-sky-400'}`}>日志</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="relative z-10 w-full flex-1">
+      <slot />
+    </main>
+
+    <footer class="w-full border-t border-slate-800/40 mt-20 py-8 text-center shrink-0 z-10">
+      <div class="max-w-5xl mx-auto px-6 flex flex-col items-center gap-2 font-mono text-xs text-slate-500">
+        <p>© 2026 CHEMIC. All rights reserved.</p>
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer" class="hover:text-sky-400 transition-colors duration-300">
+          粤ICP备2026008122号
+        </a>
+      </div>
+    </footer>
+
+  </body>
+</html>

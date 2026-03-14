@@ -1,17 +1,458 @@
 ---
+import Layout from "../layouts/Layout.astro";
 
+// ==========================================
+// 【配置区 1】主题颜色映射
+// ==========================================
+const getThemeClasses = (theme: string) => {
+  const map: Record<string, string> = {
+    sky: "border-slate-700/50 hover:border-sky-500 hover:bg-sky-500/10 text-sky-400",
+    purple:
+      "border-slate-700/50 hover:border-purple-400 hover:bg-purple-400/10 text-purple-400",
+    emerald:
+      "border-slate-700/50 hover:border-emerald-400 hover:bg-emerald-400/10 text-emerald-400",
+    slate:
+      "border-slate-700/50 hover:border-slate-300 hover:bg-slate-400/10 text-slate-300",
+  };
+  return map[theme] || map["slate"];
+};
+
+// ==========================================
+// 【配置区 2】技术栈元素周期表数据
+// ==========================================
+const techData = [
+  { id: 1, symbol: "Jv", name: "Java", theme: "sky", desc: "主力开发语言。" },
+  {
+    id: 2,
+    symbol: "Sp",
+    name: "Spring Boot",
+    theme: "sky",
+    desc: "后端核心框架，正在使用它驱动公寓租赁平台项目。",
+  },
+  {
+    id: 3,
+    symbol: "My",
+    name: "MyBatis",
+    theme: "sky",
+    desc: "持久层框架，操作数据库的利器。",
+  },
+  {
+    id: 4,
+    symbol: "Py",
+    name: "Python",
+    theme: "sky",
+    desc: "计划用于编写自动化脚本和数据处理。",
+  },
+  {
+    id: 5,
+    symbol: "Go",
+    name: "Golang",
+    theme: "sky",
+    desc: "高并发时代的宠儿，未来的拓展方向。",
+  },
+  {
+    id: 6,
+    symbol: "Nd",
+    name: "Node.js",
+    theme: "sky",
+    desc: "让 JavaScript 运行在服务端的运行环境。",
+  },
+  {
+    id: 7,
+    symbol: "C",
+    name: "C / C++",
+    theme: "sky",
+    desc: "计算机基础必备，深入底层逻辑。",
+  },
+  {
+    id: 8,
+    symbol: "Jv",
+    name: "JVM",
+    theme: "sky",
+    desc: "深入理解 Java 的必经之路。",
+  },
+  {
+    id: 9,
+    symbol: "Ht",
+    name: "HTML5",
+    theme: "purple",
+    desc: "万维网的基础骨架。",
+  },
+  {
+    id: 10,
+    symbol: "Cs",
+    name: "CSS3",
+    theme: "purple",
+    desc: "网页视觉引擎，目前正在掌握 Tailwind。",
+  },
+  {
+    id: 11,
+    symbol: "Js",
+    name: "JavaScript",
+    theme: "purple",
+    desc: "赋予网页动态交互和灵魂。",
+  },
+  {
+    id: 12,
+    symbol: "Ts",
+    name: "TypeScript",
+    theme: "purple",
+    desc: "强类型语言，让前端工程更严谨。",
+  },
+  {
+    id: 13,
+    symbol: "Vu",
+    name: "Vue.js",
+    theme: "purple",
+    desc: "渐进式前端框架。",
+  },
+  {
+    id: 14,
+    symbol: "Re",
+    name: "React",
+    theme: "purple",
+    desc: "生态最繁荣的 UI 构建库。",
+  },
+  {
+    id: 15,
+    symbol: "Tw",
+    name: "Tailwind",
+    theme: "purple",
+    desc: "原子化 CSS 引擎，本站的视觉核心。",
+  },
+  {
+    id: 16,
+    symbol: "As",
+    name: "Astro",
+    theme: "purple",
+    desc: "次世代静态网站生成器。",
+  },
+  {
+    id: 17,
+    symbol: "Sq",
+    name: "MySQL",
+    theme: "emerald",
+    desc: "关系型数据库，存储核心业务数据。",
+  },
+  {
+    id: 18,
+    symbol: "Rd",
+    name: "Redis",
+    theme: "emerald",
+    desc: "内存数据库，用于极速缓存。",
+  },
+  {
+    id: 19,
+    symbol: "Mq",
+    name: "RabbitMQ",
+    theme: "emerald",
+    desc: "消息队列中间件，系统解耦神器。",
+  },
+  {
+    id: 20,
+    symbol: "Pg",
+    name: "PostgreSQL",
+    theme: "emerald",
+    desc: "强大的开源关系型数据库。",
+  },
+  {
+    id: 21,
+    symbol: "Gt",
+    name: "Git",
+    theme: "slate",
+    desc: "版本控制系统，程序员的时光机。",
+  },
+  {
+    id: 22,
+    symbol: "Dk",
+    name: "Docker",
+    theme: "slate",
+    desc: "容器化技术，环境部署不再头疼。",
+  },
+  {
+    id: 23,
+    symbol: "Lx",
+    name: "Linux",
+    theme: "slate",
+    desc: "服务器操作系统的绝对霸主。",
+  },
+  {
+    id: 24,
+    symbol: "Ng",
+    name: "Nginx",
+    theme: "slate",
+    desc: "高性能反向代理服务器。",
+  },
+];
+
+// ==========================================
+// 【配置区 3】🌟 你的项目作品数据！🌟
+// 以后想加新项目，直接在这里照猫画虎复制一段 {} 就行了！
+// ==========================================
+const projectData = [
+  {
+    title: "apartment-lease-platform",
+    desc: "基于 Spring Boot 构建的公寓租赁平台后端服务，负责处理房源数据分发与租赁业务逻辑。",
+    link: "https://github.com/zhan-cm/apartment-lease-platform", // 点击跳转的链接
+    img: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop", // 项目截图链接
+    tags: ["Java", "Spring Boot"], // 标签
+    theme: "sky", // 鼠标悬停时的发光颜色 (sky=蓝, purple=紫, emerald=绿)
+  },
+  {
+    title: "Chemic.dev 个人主页",
+    desc: "使用最新的 Astro 框架与 Tailwind CSS 引擎构建的极客风个人主页。拥有全响应式布局与数据驱动能力。",
+    link: "https://github.com/zhan-cm",
+    img: "", // 如果没有图片，留空就行，系统会自动显示无图占位符
+    tags: ["Astro", "Tailwind CSS"],
+    theme: "purple",
+  },
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="主页 | Chemic.dev">
+  <div class="max-w-5xl mx-auto px-4 md:px-8 py-16 md:py-24 space-y-32">
+    <section class="flex flex-col items-center text-center space-y-10">
+      <div class="relative group cursor-default">
+        <div
+          class="absolute -inset-1.5 bg-gradient-to-r from-sky-500 to-purple-500 rounded-full blur opacity-20 group-hover:opacity-60 transition duration-1000 group-hover:duration-300"
+        >
+        </div>
+        <div
+          class="relative w-32 h-32 border-2 border-slate-700/80 rounded-full flex items-center justify-center bg-slate-900 overflow-hidden group-hover:border-sky-400/50 transition-colors shadow-xl"
+        >
+          <span
+            class="text-4xl font-bold text-slate-200 font-mono group-hover:text-sky-400 transition-colors"
+            >Ce</span
+          >
+          <div
+            class="absolute top-4 right-5 w-2.5 h-2.5 bg-sky-400 rounded-full shadow-[0_0_10px_#38bdf8]"
+          >
+          </div>
+        </div>
+      </div>
+      <div class="space-y-4">
+        <h1
+          class="text-4xl md:text-6xl font-extrabold text-slate-100 tracking-tight"
+        >
+          Hi, I'm <span
+            class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-purple-400"
+            >Chemic</span
+          >
+        </h1>
+        <p
+          class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed"
+        >
+          Software Engineering Student. <br class="md:hidden" /> 蒸发浓缩，冷却结晶。
+        </p>
+      </div>
+      <div>
+        <a
+          href="https://github.com/zhan-cm"
+          target="_blank"
+          class="inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-slate-800/40 border border-slate-700/60 text-slate-200 hover:bg-slate-800 hover:text-sky-400 hover:border-sky-500/50 transition-all shadow-sm hover:shadow-[0_0_20px_rgba(14,165,233,0.15)] backdrop-blur-md font-medium text-sm md:text-base"
+        >
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"
+            ><path
+              fill-rule="evenodd"
+              d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+              clip-rule="evenodd"></path></svg
+          >
+          <span>访问我的 GitHub</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="relative">
+      <div class="flex items-center gap-4 mb-10">
+        <h2
+          class="text-2xl md:text-3xl font-bold text-slate-100 tracking-wider"
+        >
+          Tech Matrix
+        </h2>
+        <div class="flex-1 h-px bg-gradient-to-r from-slate-800 to-transparent">
+        </div>
+      </div>
+      <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3">
+        {
+          techData.map((tech) => (
+            <div
+              class={`tech-item relative group p-2 border bg-slate-900/30 rounded-xl transition-all duration-300 flex flex-col items-center justify-center aspect-square cursor-pointer ${getThemeClasses(tech.theme).split("text-")[0]}`}
+              data-name={tech.name}
+              data-symbol={tech.symbol}
+              data-desc={tech.desc}
+              data-theme={tech.theme}
+            >
+              <span class="absolute top-1.5 left-1.5 text-[10px] text-slate-600 font-mono">
+                {tech.id}
+              </span>
+              <span
+                class={`text-xl md:text-2xl font-bold font-mono text-slate-400 group-hover:${getThemeClasses(tech.theme).split(" ").pop()} transition-colors`}
+              >
+                {tech.symbol}
+              </span>
+              <span class="text-[10px] md:text-xs text-slate-500 mt-1.5 truncate w-full text-center px-1 tracking-wider">
+                {tech.name}
+              </span>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="relative">
+      <div class="flex items-center gap-4 mb-10">
+        <h2
+          class="text-2xl md:text-3xl font-bold text-slate-100 tracking-wider"
+        >
+          Projects
+        </h2>
+        <div class="flex-1 h-px bg-gradient-to-r from-slate-800 to-transparent">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {
+          projectData.map((project) => (
+            <a
+              href={project.link}
+              target="_blank"
+              class={`block p-6 border border-slate-800/80 bg-slate-900/30 rounded-2xl transition-all duration-300 group ${project.theme === "sky" ? "hover:border-sky-500/50 hover:bg-slate-800/50" : "hover:border-purple-500/50 hover:bg-slate-800/30"}`}
+            >
+              {project.img ? (
+                <div class="w-full h-48 mb-6 rounded-xl overflow-hidden bg-slate-800 relative">
+                  <img
+                    src={project.img}
+                    alt={project.title}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                  />
+                  <div class="absolute inset-0 bg-slate-900/20 group-hover:bg-transparent transition-colors duration-500" />
+                </div>
+              ) : (
+                <div
+                  class={`w-full h-48 mb-6 rounded-xl overflow-hidden bg-slate-800/50 relative flex items-center justify-center border-2 border-dashed border-slate-700 transition-colors ${project.theme === "sky" ? "group-hover:border-sky-500/50" : "group-hover:border-purple-500/50"}`}
+                >
+                  <span
+                    class={`font-mono text-sm transition-colors ${project.theme === "sky" ? "text-slate-500 group-hover:text-sky-400" : "text-slate-500 group-hover:text-purple-400"}`}
+                  >
+                    Image Space Reserved
+                  </span>
+                </div>
+              )}
+
+              <h3
+                class={`text-xl font-bold text-slate-100 mb-3 transition-colors ${project.theme === "sky" ? "group-hover:text-sky-400" : "group-hover:text-purple-400"}`}
+              >
+                {project.title}
+              </h3>
+              <p class="text-sm text-slate-400 mb-8 leading-relaxed line-clamp-2">
+                {project.desc}
+              </p>
+
+              <div class="flex gap-3">
+                {project.tags.map((tag) => (
+                  <span
+                    class={`px-3 py-1.5 text-xs rounded-lg border font-medium ${project.theme === "sky" ? "bg-sky-500/10 text-sky-400 border-sky-500/20" : "bg-purple-500/10 text-purple-400 border-purple-500/20"}`}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+
+  <div
+    id="tech-modal"
+    class="fixed inset-0 bg-slate-950/80 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-md p-4"
+  >
+    <div
+      class="bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-sm w-full relative shadow-2xl"
+    >
+      <button
+        id="close-modal"
+        class="absolute top-4 right-4 text-slate-500 hover:text-slate-300 transition-colors cursor-pointer"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          ><path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"></path></svg
+        >
+      </button>
+      <div class="flex items-center gap-5 border-b border-slate-800 pb-5 mb-5">
+        <div
+          id="modal-symbol"
+          class="w-16 h-16 border-2 border-sky-500/50 rounded-xl flex items-center justify-center text-2xl font-bold font-mono text-sky-400 bg-slate-800/50"
+        >
+          --
+        </div>
+        <div>
+          <h3
+            id="modal-title"
+            class="text-xl font-bold text-slate-100 tracking-wide"
+          >
+            技术名称
+          </h3>
+          <span class="text-xs text-slate-500 font-mono mt-1 block"
+            >DATA_RECORD_ACCESSED</span
+          >
+        </div>
+      </div>
+      <p id="modal-desc" class="text-slate-400 text-sm leading-relaxed">
+        详细描述。
+      </p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const techItems = document.querySelectorAll(".tech-item");
+      const modal = document.getElementById("tech-modal")!;
+      const closeModalBtn = document.getElementById("close-modal")!;
+      const modalSymbol = document.getElementById("modal-symbol")!;
+      const modalTitle = document.getElementById("modal-title")!;
+      const modalDesc = document.getElementById("modal-desc")!;
+
+      techItems.forEach((item) => {
+        item.addEventListener("click", () => {
+          const name = item.getAttribute("data-name");
+          const symbol = item.getAttribute("data-symbol");
+          const desc = item.getAttribute("data-desc");
+          const theme = item.getAttribute("data-theme");
+
+          modalTitle.textContent = name;
+          modalSymbol.textContent = symbol;
+          modalDesc.textContent = desc;
+
+          modalSymbol.className = `w-16 h-16 border-2 rounded-xl flex items-center justify-center text-2xl font-bold font-mono bg-slate-800/50 
+            ${
+              theme === "sky"
+                ? "border-sky-500/50 text-sky-400"
+                : theme === "purple"
+                  ? "border-purple-500/50 text-purple-400"
+                  : theme === "emerald"
+                    ? "border-emerald-500/50 text-emerald-400"
+                    : "border-slate-500/50 text-slate-400"
+            }`;
+
+          modal.classList.remove("opacity-0", "pointer-events-none");
+        });
+      });
+
+      const hideModal = () =>
+        modal.classList.add("opacity-0", "pointer-events-none");
+      closeModalBtn.addEventListener("click", hideModal);
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) hideModal();
+      });
+    });
+  </script>
+</Layout>

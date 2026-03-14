@@ -1,0 +1,190 @@
+---
+import { sequence } from 'astro:middleware';
+import Layout from '../layouts/Layout.astro';
+
+// ==========================================
+// 【配置区：番剧与小说数据】
+// 极致极简版：仅保留 标题、类型、年份、海报
+// ==========================================
+const animeData = [
+  {
+    title: '蛊真人',
+    type: '网文小说',
+    year: '2012',
+    img: '/蛊真人.png', 
+  },
+  {
+    title: '凡人修仙传',
+    type: 'TV动画',
+    year: '2020',
+    img: '/凡人.png',
+  },
+  {
+    title: '修罗天帝',
+    type: '网文小说',
+    year: '2016',
+    img: '/修罗天帝.png',
+  },
+  {
+    title: '一念永恒',
+    type: 'TV动画，网文小说',
+    year: '2016',
+    img: '/一念永恒.png',
+  },
+  {
+    title: '全职法师',
+    type: 'TV动画，网文小说',
+    year: '2016',
+    img: '/全职法师.png',
+  },
+  {
+    title: '丹皇武帝',
+    type: '网文小说',
+    year: '2019',
+    img: '/丹皇武帝.png',
+  },
+  {
+    title: '凉宫春日的忧郁',
+    type: 'TV动画',
+    year: '2006',
+    img: '/凉宫.png',
+  },
+  {
+    title: '孤独摇滚',
+    type: 'TV动画',
+    year: '2022',
+    img: '/孤独.png',
+  },
+  {
+    title: '轻音少女',
+    type: 'TV动画',
+    year: '2009',
+    img: '/轻音.png',
+  },
+];
+---
+
+<Layout title="娱乐 | Chemic.dev">
+  <div class="max-w-7xl mx-auto px-4 md:px-6 py-10 space-y-8">
+
+    <section class="flex items-center gap-3 pb-4 border-b border-slate-800/80">
+      <svg class="w-6 h-6 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+      <h1 class="text-xl md:text-2xl font-bold text-slate-100 tracking-wide">我看过的番剧与小说</h1>
+    </section>
+
+    <section>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
+        
+        {animeData.map((item) => (
+          <div 
+            class="anime-card bg-slate-900 rounded-xl overflow-hidden flex flex-col border border-slate-800 shadow-lg hover:border-sky-500/50 hover:shadow-[0_0_15px_rgba(14,165,233,0.15)] transition-all duration-300 cursor-pointer group"
+            data-title={item.title}
+            data-type={item.type}
+            data-year={item.year}
+            data-img={item.img}
+          >
+            <div class="relative h-56 sm:h-64 w-full bg-slate-800 overflow-hidden">
+              <img src={item.img} alt={item.title} loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" />
+              <div class="absolute inset-0 bg-slate-900/10 group-hover:bg-transparent transition-colors duration-500"></div>
+            </div>
+
+            <div class="p-3.5 flex flex-col gap-1.5 bg-slate-900/80">
+              <h3 class="text-slate-100 font-bold text-sm truncate group-hover:text-sky-400 transition-colors" title={item.title}>
+                {item.title}
+              </h3>
+              
+              <div class="flex items-center justify-between text-[11px] text-slate-500 font-mono">
+                <span class="px-1.5 py-0.5 bg-slate-800 rounded-md border border-slate-700/50">{item.type}</span>
+                <span>{item.year}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+
+      </div>
+    </section>
+
+  </div>
+
+  <div id="anime-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="anime-modal-backdrop" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm cursor-pointer"></div>
+    
+    <div class="relative w-full max-w-lg bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] scale-95 transition-transform duration-300" id="anime-modal-content">
+      
+      <div class="absolute top-0 left-0 w-full h-48 overflow-hidden z-0 pointer-events-none">
+        <img id="modal-bg-img" src="" class="w-full h-full object-cover blur-2xl opacity-40 scale-110" />
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-slate-900"></div>
+      </div>
+
+      <button id="close-anime-modal" class="absolute top-4 right-4 z-20 p-2 bg-slate-950/50 hover:bg-slate-800 text-slate-400 hover:text-white rounded-full backdrop-blur-md transition-colors cursor-pointer">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+
+      <div class="relative z-10 flex gap-6 p-8 shrink-0 items-center">
+        <div class="w-28 shrink-0 rounded-lg overflow-hidden shadow-lg border border-slate-700/50 bg-slate-800">
+          <img id="modal-img" src="" alt="cover" class="w-full h-auto object-cover aspect-[3/4]" />
+        </div>
+
+        <div class="flex-1 flex flex-col text-slate-200">
+          <h2 id="modal-title" class="text-2xl font-extrabold tracking-wide mb-3 text-white line-clamp-2">番剧标题</h2>
+          
+          <div class="space-y-2 text-xs text-slate-400 font-mono bg-slate-950/40 p-3 rounded-lg border border-slate-800/50 w-fit">
+            <p class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> 
+              <span id="modal-type">TV动画</span>
+            </p>
+            <p class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> 
+              <span id="modal-year">2020 年</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.anime-card');
+      const modal = document.getElementById('anime-modal')!;
+      const modalContent = document.getElementById('anime-modal-content')!;
+      const backdrop = document.getElementById('anime-modal-backdrop')!;
+      const closeBtn = document.getElementById('close-anime-modal')!;
+
+      const elTitle = document.getElementById('modal-title')!;
+      const elType = document.getElementById('modal-type')!;
+      const elYear = document.getElementById('modal-year')!;
+      const elImg = document.getElementById('modal-img') as HTMLImageElement;
+      const elBgImg = document.getElementById('modal-bg-img') as HTMLImageElement;
+
+      cards.forEach(card => {
+        card.addEventListener('click', () => {
+          // 读取卡片绑定的精简数据
+          elTitle.textContent = card.getAttribute('data-title');
+          elType.textContent = card.getAttribute('data-type');
+          elYear.textContent = `${card.getAttribute('data-year')} 年`;
+          
+          const imgSrc = card.getAttribute('data-img');
+          elImg.src = imgSrc || '';
+          elBgImg.src = imgSrc || '';
+
+          // 显示弹窗动画
+          modal.classList.remove('opacity-0', 'pointer-events-none');
+          modalContent.classList.remove('scale-95');
+          modalContent.classList.add('scale-100');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      const hideModal = () => {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        modalContent.classList.remove('scale-100');
+        modalContent.classList.add('scale-95');
+        document.body.style.overflow = '';
+      };
+
+      closeBtn.addEventListener('click', hideModal);
+      backdrop.addEventListener('click', hideModal);
+    });
+  </script>
+</Layout>
