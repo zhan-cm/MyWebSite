@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="404 - 访问受限 | Chemic.dev">
+  <main class="min-h-[80vh] flex flex-col items-center justify-center text-center px-4">
+    <div class="space-y-6">
+      <h1 class="text-8xl md:text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.5)]">
+        404
+      </h1>
+      
+      <div class="space-y-2">
+        <h2 class="text-2xl md:text-3xl font-semibold text-gray-200 tracking-wide">
+          [ 警告 ] 区域未授权或已逸散
+        </h2>
+        <p class="text-gray-400 font-mono text-sm md:text-base max-w-md mx-auto mt-2">
+          ERR_CONNECTION_REFUSED: 目标数据节点不存在。<br/>
+          您正在尝试访问当前空间中未被定义的物理地址。
+        </p>
+      </div>
+
+      <div class="pt-8">
+        <a href="/" class="inline-flex items-center gap-2 px-6 py-3 bg-gray-800/50 border border-gray-700 hover:border-emerald-500/50 hover:bg-emerald-500/10 text-gray-300 hover:text-emerald-400 rounded-lg transition-all duration-300 group font-mono">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          返回主控台 (cd ~/)
+        </a>
+      </div>
+    </div>
+  </main>
+</Layout>
