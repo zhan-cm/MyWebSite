@@ -39,6 +39,8 @@ npm run dev
 ```
 
 ## 📁 目录结构
+
+```text
 Plaintext
 ├── public/                # 静态资源 (图片、图标等)
 ├── src/
@@ -47,6 +49,8 @@ Plaintext
 │   └── global.css         # 全局样式配置
 ├── .github/workflows/     # CI/CD 自动化部署脚本
 └── astro.config.mjs       # Astro 核心配置文件
+```
+
 
 ## 👨‍💻 关于作者
 GitHub: @zhan-cm
