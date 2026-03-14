@@ -36,6 +36,8 @@ npm run dev
 
 本地服务器启动后，浏览器访问 http://localhost:4321 进行实时预览。
 
+```
+
 ## 📁 目录结构
 Plaintext
 ├── public/                # 静态资源 (图片、图标等)
