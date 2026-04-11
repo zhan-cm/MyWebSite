@@ -488,8 +488,22 @@ const projectData = [
         <div class="w-12 h-12 bg-indigo-500/20 rounded-full flex items-center justify-center mb-4 border border-indigo-500/50 text-indigo-400">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
         </div>
-        <h3 class="text-xl font-bold text-slate-100 tracking-wide">系统访问受限</h3>
-        <p class="text-xs text-slate-500 font-mono mt-1">PLEASE ENTER ACCESS CODE</p>
+        <h3 class="text-xl font-bold text-slate-100 tracking-wide">系统访问模式</h3>
+        <p class="text-xs text-slate-500 font-mono mt-1">SELECT ACCESS LEVEL</p>
+      </div>
+
+      <button 
+        id="guest-login"
+        class="w-full mb-4 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-lg text-sm font-bold tracking-wider transition-all flex items-center justify-center gap-2"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+        以游客身份访问 (仅浏览)
+      </button>
+
+      <div class="relative flex items-center py-2 mb-4">
+        <div class="flex-grow border-t border-slate-700"></div>
+        <span class="flex-shrink-0 mx-4 text-slate-500 text-xs font-mono">OR ADMIN LOGIN</span>
+        <div class="flex-grow border-t border-slate-700"></div>
       </div>
 
       <div class="space-y-4">
@@ -514,7 +528,6 @@ const projectData = [
   // 密码弹窗的 UI 和验证逻辑代码 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // ⚠️ 【配置区】：在这里设置你的专属密码
       const SECRET_PASSWORD = "Chemic@2026"; 
 
       const triggerBtn = document.getElementById("trigger-pwd-modal");
@@ -522,56 +535,50 @@ const projectData = [
       const modalContent = document.getElementById("pwd-modal-content");
       const closeBtn = document.getElementById("close-pwd-modal");
       const submitBtn = document.getElementById("submit-pwd");
+      const guestBtn = document.getElementById("guest-login");
       const input = document.getElementById("secret-input") as HTMLInputElement;
       const errorMsg = document.getElementById("pwd-error");
 
-      // 打开弹窗
       triggerBtn?.addEventListener("click", () => {
         modal?.classList.remove("opacity-0", "pointer-events-none");
         modalContent?.classList.remove("scale-95");
         modalContent?.classList.add("scale-100");
-        input.value = "";
-        errorMsg?.classList.add("opacity-0");
-        setTimeout(() => input.focus(), 100); // 自动聚焦输入框
       });
 
-      // 关闭弹窗
       const hideModal = () => {
         modal?.classList.add("opacity-0", "pointer-events-none");
         modalContent?.classList.remove("scale-100");
         modalContent?.classList.add("scale-95");
       };
       closeBtn?.addEventListener("click", hideModal);
-      modal?.addEventListener("click", (e) => {
-        if (e.target === modal) hideModal();
+      modal?.addEventListener("click", (e) => { if (e.target === modal) hideModal(); });
+
+      // 游客通道逻辑
+      guestBtn?.addEventListener("click", () => {
+        sessionStorage.setItem("digital_garden_unlocked", "true");
+        sessionStorage.setItem("digital_garden_role", "guest"); // 标记为游客
+        window.location.href = "/notes";
       });
 
-      // 验证密码逻辑
+      // 管理员通道逻辑
       const verifyPassword = () => {
         if (input.value === SECRET_PASSWORD) {
-          // 密码正确，在浏览器会话中做一个“已解锁”的标记
           sessionStorage.setItem("digital_garden_unlocked", "true");
-          // 跳转到笔记页面
+          sessionStorage.setItem("digital_garden_role", "admin"); // 标记为管理员
           window.location.href = "/notes";
         } else {
-          // 密码错误，播放错误提示和震动动画
           errorMsg?.classList.remove("opacity-0");
           modalContent?.classList.add("animate-[shake_0.5s_ease-in-out]");
-          setTimeout(() => {
-            modalContent?.classList.remove("animate-[shake_0.5s_ease-in-out]");
-          }, 500);
+          setTimeout(() => modalContent?.classList.remove("animate-[shake_0.5s_ease-in-out]"), 500);
           input.value = "";
           input.focus();
         }
       };
 
       submitBtn?.addEventListener("click", verifyPassword);
-      input?.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") verifyPassword();
-      });
+      input?.addEventListener("keypress", (e) => { if (e.key === "Enter") verifyPassword(); });
     });
   </script>
-
   <style>
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
