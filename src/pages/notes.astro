@@ -1,0 +1,82 @@
+---
+
+// 引入你的全局布局组件
+
+import Layout from '../layouts/Layout.astro';
+
+// 引入刚刚粘贴的 React 笔记组件
+
+import NoteApp from '../components/NoteApp.jsx';
+
+
+
+// ==========================================
+
+// 【配置区】Firebase 数据库参数
+
+// ==========================================
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyCOIj14mdQ3XV5QtlPqIEssSCQl0ck_0uA",
+
+  authDomain: "my-cyber-notes.firebaseapp.com",
+
+  projectId: "my-cyber-notes",
+
+  storageBucket: "my-cyber-notes.firebasestorage.app",
+
+  messagingSenderId: "330251389903",
+
+  appId: "1:330251389903:web:a293b066b3d43862ef60ba",
+
+  measurementId: "G-QXJLG1ZB83"
+
+};
+
+---
+
+
+
+<Layout title="我的赛博笔记 | Digital Garden">
+
+    <script>
+    // 在浏览器加载前立即检查标记
+    if (typeof sessionStorage !== 'undefined') {
+      const isUnlocked = sessionStorage.getItem("digital_garden_unlocked");
+      if (isUnlocked !== "true") {
+        // 如果没有解锁标记，立刻强行重定向到主页
+        window.location.replace("/");
+      }
+    }
+  </script>
+
+  <main class="container mx-auto px-4 py-8 h-screen flex flex-col">
+
+    <div class="mb-6 flex-shrink-0">
+
+      <h1 class="text-4xl font-black text-white mb-2 tracking-tighter">
+
+        DIGITAL <span class="text-indigo-500 italic">GARDEN</span>
+
+      </h1>
+
+      <p class="text-slate-400 text-sm border-l-2 border-indigo-500 pl-4">
+
+        持久化云端存储 · 支持 Markdown · 赛博审美界面
+
+      </p>
+
+    </div>
+
+
+
+    <div class="flex-1 min-h-0 pb-10">
+
+      <NoteApp client:only="react" firebaseConfig={firebaseConfig} />
+
+    </div>
+
+  </main>
+
+</Layout>

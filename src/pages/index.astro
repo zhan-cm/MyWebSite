@@ -253,7 +253,9 @@ const projectData = [
           Software Engineering Student. <br class="md:hidden" /> 蒸发浓缩，冷却结晶。
         </p>
       </div>
-      <div>
+      
+      <!-- 这里是修改过的区域：将两个按钮并排放置 -->
+      <div class="flex flex-wrap justify-center items-center gap-4">
         <a
           href="https://github.com/zhan-cm"
           target="_blank"
@@ -267,6 +269,16 @@ const projectData = [
           >
           <span>访问我的 GitHub</span>
         </a>
+        
+        <button
+          id="trigger-pwd-modal"
+          class="inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 hover:bg-indigo-500/20 hover:text-indigo-200 hover:border-indigo-500/60 transition-all shadow-sm hover:shadow-[0_0_20px_rgba(99,102,241,0.25)] backdrop-blur-md font-medium text-sm md:text-base cursor-pointer"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+          </svg>
+          <span>Digital Garden 笔记</span>
+        </button>
       </div>
     </section>
 
@@ -463,4 +475,108 @@ const projectData = [
       });
     });
   </script>
+  <div
+    id="pwd-modal"
+    class="fixed inset-0 bg-slate-950/80 z-[60] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-md p-4"
+  >
+    <div class="bg-slate-900 border border-indigo-500/30 rounded-2xl p-8 max-w-sm w-full relative shadow-[0_0_30px_rgba(99,102,241,0.15)] transform scale-95 transition-transform duration-300" id="pwd-modal-content">
+      <button id="close-pwd-modal" class="absolute top-4 right-4 text-slate-500 hover:text-slate-300 transition-colors cursor-pointer">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+      
+      <div class="flex flex-col items-center mb-6">
+        <div class="w-12 h-12 bg-indigo-500/20 rounded-full flex items-center justify-center mb-4 border border-indigo-500/50 text-indigo-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+        </div>
+        <h3 class="text-xl font-bold text-slate-100 tracking-wide">系统访问受限</h3>
+        <p class="text-xs text-slate-500 font-mono mt-1">PLEASE ENTER ACCESS CODE</p>
+      </div>
+
+      <div class="space-y-4">
+        <input 
+          type="password" 
+          id="secret-input" 
+          placeholder="•••" 
+          class="w-full bg-black/40 border border-slate-700 rounded-lg px-4 py-3 text-center text-indigo-300 font-mono text-lg tracking-[0.5em] focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all placeholder:tracking-normal placeholder:text-slate-600"
+          autocomplete="off"
+        />
+        <p id="pwd-error" class="text-red-400 text-xs text-center h-4 opacity-0 transition-opacity">Access Denied: 密码错误</p>
+        <button 
+          id="submit-pwd"
+          class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-bold tracking-widest shadow-[0_0_15px_rgba(79,70,229,0.4)] transition-all active:scale-95"
+        >
+          AUTHENTICATE
+        </button>
+      </div>
+    </div>
+  </div>
+
+  // 密码弹窗的 UI 和验证逻辑代码
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // ⚠️ 【配置区】：在这里设置你的专属密码
+      const SECRET_PASSWORD = "Chemic@2026"; 
+
+      const triggerBtn = document.getElementById("trigger-pwd-modal");
+      const modal = document.getElementById("pwd-modal");
+      const modalContent = document.getElementById("pwd-modal-content");
+      const closeBtn = document.getElementById("close-pwd-modal");
+      const submitBtn = document.getElementById("submit-pwd");
+      const input = document.getElementById("secret-input") as HTMLInputElement;
+      const errorMsg = document.getElementById("pwd-error");
+
+      // 打开弹窗
+      triggerBtn?.addEventListener("click", () => {
+        modal?.classList.remove("opacity-0", "pointer-events-none");
+        modalContent?.classList.remove("scale-95");
+        modalContent?.classList.add("scale-100");
+        input.value = "";
+        errorMsg?.classList.add("opacity-0");
+        setTimeout(() => input.focus(), 100); // 自动聚焦输入框
+      });
+
+      // 关闭弹窗
+      const hideModal = () => {
+        modal?.classList.add("opacity-0", "pointer-events-none");
+        modalContent?.classList.remove("scale-100");
+        modalContent?.classList.add("scale-95");
+      };
+      closeBtn?.addEventListener("click", hideModal);
+      modal?.addEventListener("click", (e) => {
+        if (e.target === modal) hideModal();
+      });
+
+      // 验证密码逻辑
+      const verifyPassword = () => {
+        if (input.value === SECRET_PASSWORD) {
+          // 密码正确，在浏览器会话中做一个“已解锁”的标记
+          sessionStorage.setItem("digital_garden_unlocked", "true");
+          // 跳转到笔记页面
+          window.location.href = "/notes";
+        } else {
+          // 密码错误，播放错误提示和震动动画
+          errorMsg?.classList.remove("opacity-0");
+          modalContent?.classList.add("animate-[shake_0.5s_ease-in-out]");
+          setTimeout(() => {
+            modalContent?.classList.remove("animate-[shake_0.5s_ease-in-out]");
+          }, 500);
+          input.value = "";
+          input.focus();
+        }
+      };
+
+      submitBtn?.addEventListener("click", verifyPassword);
+      input?.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") verifyPassword();
+      });
+    });
+  </script>
+
+  <style>
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+  </style>
 </Layout>
